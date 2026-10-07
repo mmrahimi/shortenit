@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Auth\LoginUserAction;
+use App\Actions\Auth\LogoutUserAction;
 use App\Actions\Auth\RegisterUserAction;
 use App\Http\Requests\Auth\LoginUserRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -29,5 +31,10 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout() {}
+    public function logout(Request $request, LogoutUserAction $action)
+    {
+        $action->execute($request->user());
+
+        return response()->json(status: 204);
+    }
 }
