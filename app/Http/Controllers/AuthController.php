@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Auth\LoginUserAction;
 use App\Actions\Auth\RegisterUserAction;
+use App\Http\Requests\Auth\LoginUserRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
 
 class AuthController extends Controller
@@ -17,7 +19,15 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login() {}
+    public function login(LoginUserRequest $request, LoginUserAction $action)
+    {
+        $token = $action->execute($request->validated());
+
+        return response()->json([
+            'message' => 'User logged in successfully',
+            'token' => $token,
+        ]);
+    }
 
     public function logout() {}
 }
