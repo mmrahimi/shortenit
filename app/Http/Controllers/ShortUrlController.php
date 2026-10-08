@@ -9,10 +9,10 @@ class ShortUrlController extends Controller
 {
     public function store(CreateShortUrlRequest $request, CreateShortUrlAction $action)
     {
-        $shortUrl = $action->execute($request->user(), $request->validated());
+        $shortCode = $action->execute($request->user('sanctum'), $request->attributes->get('guest_token'), $request->validated());
 
         return response()->json([
-            'short_url' => url($shortUrl),
+            'short_url' => url($shortCode)
         ], 201);
     }
 }

@@ -2,18 +2,21 @@
 
 namespace App\Actions\Auth;
 
-use Laravel\Sanctum\PersonalAccessToken;
+use App\Actions\ShortUrl\ClaimGuestUrlsAction;
+use Illuminate\Support\Facades\DB;
 
 class IssueAuthTokenAction
 {
-    public function execute($user)
+    public function __construct(private ClaimGuestUrlsAction $claimGuestUrlsAction) {}
+
+    public function execute($user, $guestToken)
     {
-        $token = $user->createToken('api-token')->plainTextToken;
-        $accessToken = PersonalAccessToken::findToken($token);
+        return DB::transaction(function () use ($user, $guestToken) {
+            $token = $user->createToken('api-token', ['*'], now()->addHours(8))->plainTextToken;
 
-        $accessToken->expires_at = now()->addHours(8);
-        $accessToken->save();
+            $this->claimGuestUrlsAction->execute($user, $guestToken);
 
-        return $token;
+            return $token;
+        });
     }
 }

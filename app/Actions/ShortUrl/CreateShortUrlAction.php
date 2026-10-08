@@ -7,16 +7,18 @@ use Illuminate\Support\Str;
 
 class CreateShortUrlAction
 {
-    public function execute($user, $data)
+    public function execute($user, $guestToken, $data)
     {
-        $shortCode = Str::random(config('shortenit.short_url_length'));
+        $owner = $user ? ['user_id' => $user->id] : ['guest_token' => $guestToken];
 
-        ShortUrl::create([
-            'user_id' => $user?->id,
-            'short_code' => $shortCode,
-            'original_url' => $data['original_url'],
-        ]);
+        $shortUrl = ShortUrl::firstOrCreate(
+            $owner + ['url_hash' => hash('sha256', $data['original_url'])],
+            [
+                'short_code' => Str::random(config('shortenit.short_url_length')),
+                'original_url' => $data['original_url'],
+            ],
+        );
 
-        return $shortCode;
+        return $shortUrl->short_code;
     }
 }
