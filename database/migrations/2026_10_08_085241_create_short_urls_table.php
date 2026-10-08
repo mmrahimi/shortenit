@@ -20,7 +20,7 @@ return new class extends Migration
             $table->char('url_hash', 64);
             $table->timestamps();
 
-            $table->unique(['user_id', 'url_hash']);
+            $table->index(['user_id', 'url_hash']);
             $table->unique(['guest_token', 'url_hash']);
         });
     }
