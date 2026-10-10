@@ -16,15 +16,23 @@ class EnsureGuestToken
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (auth('sanctum')->check()) {
+            return $next($request);
+        }
+
         $token = $request->cookie('guest_token');
 
         if (! Str::isUuid($token)) {
             $token = (string) Str::uuid();
+
+            $request->attributes->set('guest_token', $token);
+
+            return $next($request)
+                ->withCookie(cookie('guest_token', $token, 60 * 24 * 365));
         }
 
         $request->attributes->set('guest_token', $token);
 
-        return $next($request)
-            ->withCookie(cookie('guest_token', $token, 60 * 24 * 365));
+        return $next($request);
     }
 }
