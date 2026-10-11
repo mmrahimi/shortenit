@@ -13,7 +13,7 @@ class AuthController extends Controller
 {
     public function register(RegisterUserRequest $request, RegisterUserAction $action)
     {
-        $token = $action->execute($request->validated());
+        $token = $action->execute($request->validated(), $request->attributes->get('guest_token'));
 
         return response()->json([
             'message' => 'User created successfully',
@@ -23,7 +23,7 @@ class AuthController extends Controller
 
     public function login(LoginUserRequest $request, LoginUserAction $action)
     {
-        $token = $action->execute($request->validated());
+        $token = $action->execute($request->validated(), $request->attributes->get('guest_token'));
 
         return response()->json([
             'message' => 'User logged in successfully',

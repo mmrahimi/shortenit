@@ -12,13 +12,13 @@ class LoginUserAction
         private IssueAuthTokenAction $issueAuthTokenAction
     ) {}
 
-    public function execute($data)
+    public function execute($data, $guestToken)
     {
         $user = User::where('username', $data['username'])->first();
 
         $this->validate($user, $data['password']);
 
-        return $this->issueAuthTokenAction->execute($user);
+        return $this->issueAuthTokenAction->execute($user, $guestToken);
     }
 
     private function validate($user, $password)

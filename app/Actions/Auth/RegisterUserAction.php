@@ -11,12 +11,12 @@ class RegisterUserAction
         private IssueAuthTokenAction $issueAuthTokenAction
     ) {}
 
-    public function execute($data)
+    public function execute($data, $guestToken)
     {
         $data['password'] = Hash::make($data['password']);
 
         $user = User::create($data);
 
-        return $this->issueAuthTokenAction->execute($user);
+        return $this->issueAuthTokenAction->execute($user, $guestToken);
     }
 }
