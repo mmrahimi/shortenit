@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
+require_once "Helpers.php";
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
