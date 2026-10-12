@@ -11,7 +11,7 @@ class RegisterUserAction
         private IssueAuthTokenAction $issueAuthTokenAction
     ) {}
 
-    public function execute($data, $guestToken)
+    public function execute(array $data, ?string $guestToken): string
     {
         $data['password'] = Hash::make($data['password']);
 

@@ -7,11 +7,12 @@ use App\Actions\Auth\LogoutUserAction;
 use App\Actions\Auth\RegisterUserAction;
 use App\Http\Requests\Auth\LoginUserRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
-    public function register(RegisterUserRequest $request, RegisterUserAction $action)
+    public function register(RegisterUserRequest $request, RegisterUserAction $action): JsonResponse
     {
         $token = $action->execute($request->validated(), $request->attributes->get('guest_token'));
 
@@ -21,7 +22,7 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(LoginUserRequest $request, LoginUserAction $action)
+    public function login(LoginUserRequest $request, LoginUserAction $action): JsonResponse
     {
         $token = $action->execute($request->validated(), $request->attributes->get('guest_token'));
 
@@ -31,7 +32,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function logout(Request $request, LogoutUserAction $action)
+    public function logout(Request $request, LogoutUserAction $action): JsonResponse
     {
         $action->execute($request->user());
 

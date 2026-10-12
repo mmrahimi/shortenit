@@ -3,10 +3,11 @@
 namespace App\Actions\ShortUrl;
 
 use App\Models\ShortUrl;
+use App\Models\User;
 
 class ClaimGuestUrlsAction
 {
-    public function execute($user, $guestToken)
+    public function execute(User $user, ?string $guestToken): void
     {
         if (! $guestToken) {
             return;

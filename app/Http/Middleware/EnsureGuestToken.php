@@ -27,8 +27,10 @@ class EnsureGuestToken
 
             $request->attributes->set('guest_token', $token);
 
-            return $next($request)
-                ->withCookie(cookie('guest_token', $token, 60 * 24 * 365));
+            $response = $next($request);
+            $response->headers->setCookie(cookie('guest_token', $token, 60 * 24 * 365));
+
+            return $response;
         }
 
         $request->attributes->set('guest_token', $token);

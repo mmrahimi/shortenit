@@ -12,7 +12,7 @@ class LoginUserAction
         private IssueAuthTokenAction $issueAuthTokenAction
     ) {}
 
-    public function execute($data, $guestToken)
+    public function execute(array $data, ?string $guestToken): string
     {
         $user = User::where('username', $data['username'])->first();
 
@@ -21,7 +21,7 @@ class LoginUserAction
         return $this->issueAuthTokenAction->execute($user, $guestToken);
     }
 
-    private function validate($user, $password)
+    private function validate(?User $user, string $password): void
     {
         if (! $user || ! Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([
