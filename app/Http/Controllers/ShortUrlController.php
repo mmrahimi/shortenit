@@ -13,7 +13,8 @@ class ShortUrlController extends Controller
         $shortCode = $action->execute($request->user('sanctum'), $request->attributes->get('guest_token'), $request->validated());
 
         return response()->json([
-            'short_url' => url($shortCode),
+            'short_code' => $shortCode,
+            'short_url' => route('redirect', $shortCode),
         ], 201);
     }
 
