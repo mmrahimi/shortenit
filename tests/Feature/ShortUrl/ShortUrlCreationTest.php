@@ -4,45 +4,12 @@ use App\Models\ShortUrl;
 use App\Models\User;
 use Illuminate\Support\Str;
 
-const URL_A = 'https://example.com/a';
-const URL_B = 'https://example.com/b';
-const PASSWORD = 'password123';
+it('returns a short url that matches the redirect route', function () {
+    $response = shorten(URL_A, (string) Str::uuid())->assertCreated();
 
-function apiPost($uri, $payload, $cookies = [], $server = [])
-{
-    auth()->forgetGuards();
-
-    return test()->call(
-        'POST',
-        "/api{$uri}",
-        [],
-        $cookies,
-        [],
-        ['CONTENT_TYPE' => 'application/json', 'HTTP_ACCEPT' => 'application/json'] + $server,
-        json_encode($payload),
-    );
-}
-
-function shorten($url, $guestToken = null, $user = null)
-{
-    return apiPost('/urls', ['original_url' => $url],
-        $guestToken ? ['guest_token' => $guestToken] : [],
-        $user ? ['HTTP_AUTHORIZATION' => 'Bearer '.$user->createToken('test')->plainTextToken] : []);
-}
-
-function loginAs($user, $guestToken)
-{
-    return apiPost(
-        '/login',
-        ['username' => $user->username, 'password' => PASSWORD],
-        $guestToken ? ['guest_token' => $guestToken] : [],
-    );
-}
-
-function createDoe()
-{
-    return User::factory()->create(['username' => 'doe', 'password' => bcrypt(PASSWORD)]);
-}
+    expect($response->json('short_url'))
+        ->toBe(route('redirect', $response->json('short_code')));
+});
 
 it('issues a uuid guest cookie to a new guest and stores it on the row', function () {
     $cookie = shorten(URL_A)->assertCreated()->getCookie('guest_token', false);
@@ -159,8 +126,10 @@ it('requires original_url', function () {
         ->assertJsonValidationErrors('original_url');
 });
 
-it('rejects values that are not urls', function () {
-    shorten('not a url')->assertUnprocessable();
+it('rejects invalid URLs', function () {
+    foreach (['not a url', 'ftp://test.com'] as $url) {
+        shorten($url)->assertUnprocessable();
+    }
 
     expect(ShortUrl::count())->toBe(0);
 });

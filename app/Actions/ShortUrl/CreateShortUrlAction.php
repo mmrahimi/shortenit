@@ -3,11 +3,12 @@
 namespace App\Actions\ShortUrl;
 
 use App\Models\ShortUrl;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 class CreateShortUrlAction
 {
-    public function execute($user, $guestToken, $data)
+    public function execute(?User $user, ?string $guestToken, array $data): string
     {
         $owner = $user ? ['user_id' => $user->id] : ['guest_token' => $guestToken];
 

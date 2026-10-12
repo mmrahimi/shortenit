@@ -23,7 +23,7 @@ class CreateShortUrlRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'original_url' => ['required', 'url', 'max:2048'],
+            'original_url' => ['required', 'url:https,http', 'max:2048'],
         ];
     }
 }

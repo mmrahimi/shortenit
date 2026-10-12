@@ -2,9 +2,11 @@
 
 namespace App\Actions\Auth;
 
+use App\Models\User;
+
 class LogoutUserAction
 {
-    public function execute($user)
+    public function execute(User $user): void
     {
         $user->currentAccessToken()->delete();
     }

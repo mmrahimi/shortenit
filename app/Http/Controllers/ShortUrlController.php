@@ -3,16 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ShortUrl\CreateShortUrlAction;
+use App\Actions\ShortUrl\FindShortUrlAction;
 use App\Http\Requests\ShortUrl\CreateShortUrlRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 
 class ShortUrlController extends Controller
 {
-    public function store(CreateShortUrlRequest $request, CreateShortUrlAction $action)
+    public function store(CreateShortUrlRequest $request, CreateShortUrlAction $action): JsonResponse
     {
         $shortCode = $action->execute($request->user('sanctum'), $request->attributes->get('guest_token'), $request->validated());
 
         return response()->json([
-            'short_url' => url($shortCode),
+            'short_code' => $shortCode,
+            'short_url' => route('redirect', $shortCode),
         ], 201);
+    }
+
+    public function redirect(string $shortCode, FindShortUrlAction $action): RedirectResponse
+    {
+        $shortUrl = $action->execute($shortCode);
+
+        return redirect($shortUrl->original_url, 301);
     }
 }

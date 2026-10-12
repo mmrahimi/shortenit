@@ -11,3 +11,5 @@ Route::middleware('guest.token')->group(function () {
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+
+Route::get('/{shortCode}', [ShortUrlController::class, 'redirect'])->name('redirect');
