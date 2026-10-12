@@ -159,8 +159,10 @@ it('requires original_url', function () {
         ->assertJsonValidationErrors('original_url');
 });
 
-it('rejects values that are not urls', function () {
-    shorten('not a url')->assertUnprocessable();
+it('rejects invalid URLs', function () {
+    foreach (['not a url', 'ftp://test.com'] as $url) {
+        shorten($url)->assertUnprocessable();
+    }
 
     expect(ShortUrl::count())->toBe(0);
 });
