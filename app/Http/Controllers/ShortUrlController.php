@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ShortUrl\CreateShortUrlAction;
+use App\Actions\ShortUrl\FindShortUrlAction;
 use App\Http\Requests\ShortUrl\CreateShortUrlRequest;
 
 class ShortUrlController extends Controller
@@ -14,5 +15,12 @@ class ShortUrlController extends Controller
         return response()->json([
             'short_url' => url($shortCode),
         ], 201);
+    }
+
+    public function redirect($shortCode, FindShortUrlAction $action)
+    {
+        $shortUrl = $action->execute($shortCode);
+
+        return redirect($shortUrl->original_url, 301);
     }
 }
