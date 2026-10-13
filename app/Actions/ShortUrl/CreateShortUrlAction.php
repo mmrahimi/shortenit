@@ -34,9 +34,9 @@ class CreateShortUrlAction
 
                 try {
                     return ShortUrl::create($attributes + [
-                            'short_code' => $code,
-                            'original_url' => $data['original_url'],
-                        ])->short_code;
+                        'short_code' => $code,
+                        'original_url' => $data['original_url'],
+                    ])->short_code;
                 } catch (UniqueConstraintViolationException $e) {
                     if ($existing = $this->existingCode($attributes)) {
                         return $existing;
