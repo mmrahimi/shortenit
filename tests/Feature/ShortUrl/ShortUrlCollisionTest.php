@@ -23,7 +23,11 @@ beforeEach(function () {
 afterEach(fn () => Str::createRandomStringsNormally());
 
 it('retries with a new code when the generated code already exists', function () {
-    Str::createRandomStringsUsingSequence(['aaaaaa', 'bbbbbb']);
+    $codes = ['aaaaaa', 'bbbbbb'];
+
+    Str::createRandomStringsUsing(function (int $length) use (&$codes) {
+        return $length === 6 ? array_shift($codes) : str_repeat('x', $length);
+    });
 
     $code = shorten(URL_A, (string) Str::uuid())->assertCreated()->json('short_code');
 
