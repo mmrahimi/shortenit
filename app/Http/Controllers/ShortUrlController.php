@@ -22,8 +22,8 @@ class ShortUrlController extends Controller
 
     public function redirect(string $shortCode, FindShortUrlAction $action): RedirectResponse
     {
-        $shortUrl = $action->execute($shortCode);
+        $originalUrl = $action->execute($shortCode);
 
-        return redirect($shortUrl->original_url, 301);
+        return redirect($originalUrl);
     }
 }

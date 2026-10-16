@@ -11,4 +11,9 @@ class ShortUrl extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function redirectCacheKey(string $shortCode): string
+    {
+        return "short_urls:redirect:$shortCode";
+    }
 }
