@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('short_urls', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->uuid('guest_token')->nullable()->index();
+            $table->foreignId('user_id')->nullable()->constrained();
+            $table->uuid('guest_token')->nullable();
             $table->string('short_code', 8)->unique();
             $table->text('original_url');
             $table->char('url_hash', 64);
