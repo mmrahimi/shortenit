@@ -34,7 +34,7 @@ class AppServiceProvider extends ServiceProvider
 
     private function configureRateLimiters(): void
     {
-        RateLimiter::for('general', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
+        RateLimiter::for('general', fn (Request $request) => Limit::perMinute(60)->by($request->user('sanctum')?->id ?: $request->ip()));
         RateLimiter::for('auth', fn (Request $request) => Limit::perMinute(5)->by($request->ip()));
         RateLimiter::for('create-url', fn (Request $request) => Limit::perMinute(10)->by($request->user('sanctum')?->id ?: $request->ip()));
         RateLimiter::for('redirect', fn (Request $request) => Limit::perMinute(120)->by($request->ip()));

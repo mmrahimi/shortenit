@@ -3,7 +3,10 @@
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-require_once 'Helpers.php';
+require_once 'Helpers/ApiHelpers.php';
+require_once 'Helpers/AuthHelpers.php';
+require_once 'Helpers/ShortUrlHelpers.php';
+require_once 'Helpers/ThrottleHelpers.php';
 
 /*
 |--------------------------------------------------------------------------
