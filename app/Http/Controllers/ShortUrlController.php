@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Actions\ShortUrl\CreateShortUrlAction;
 use App\Actions\ShortUrl\FindShortUrlAction;
+use App\Actions\ShortUrl\RecordClickAction;
 use App\Http\Requests\ShortUrl\CreateShortUrlRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class ShortUrlController extends Controller
 {
@@ -20,9 +22,13 @@ class ShortUrlController extends Controller
         ], 201);
     }
 
-    public function redirect(string $shortCode, FindShortUrlAction $action): RedirectResponse
+    public function redirect(Request $request, string $shortCode, FindShortUrlAction $find, RecordClickAction $recordClick): RedirectResponse
     {
-        $originalUrl = $action->execute($shortCode);
+        $originalUrl = $find->execute($shortCode);
+
+        if (! $request->isMethod('HEAD')) {
+            $recordClick->execute($shortCode);
+        }
 
         return redirect($originalUrl);
     }
