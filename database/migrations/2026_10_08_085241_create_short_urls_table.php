@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('short_code', 8)->unique();
             $table->text('original_url');
             $table->char('url_hash', 64);
+            $table->unsignedBigInteger('clicks')->default(0);
             $table->timestamps();
 
             $table->index(['user_id', 'url_hash']);
