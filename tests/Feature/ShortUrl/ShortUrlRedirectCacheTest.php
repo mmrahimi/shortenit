@@ -2,7 +2,6 @@
 
 use App\Models\ShortUrl;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Exceptions;
 use Illuminate\Support\Str;
 
@@ -17,21 +16,19 @@ it('caches the original url after the first redirect', function () {
     expect(Cache::get($key))->toBe(URL_A);
 });
 
-it('serves repeat redirects without querying short_urls', function () {
+it('serves repeat redirects without loading the link from the database', function () {
     $code = shorten(URL_A, (string) Str::uuid())->json('short_code');
-    $lookups = fn () => collect(DB::getQueryLog())
-        ->filter(fn ($query) => str_contains($query['query'], 'short_urls'))
-        ->count();
+    $loads = 0;
 
-    DB::enableQueryLog();
-
-    test()->get("/api/$code")->assertStatus(302)->assertRedirect(URL_A);
-    expect($lookups())->toBe(1);
-
-    DB::flushQueryLog();
+    ShortUrl::retrieved(function () use (&$loads) {
+        $loads++;
+    });
 
     test()->get("/api/$code")->assertStatus(302)->assertRedirect(URL_A);
-    expect($lookups())->toBe(0);
+    expect($loads)->toBe(1);
+
+    test()->get("/api/$code")->assertStatus(302)->assertRedirect(URL_A);
+    expect($loads)->toBe(1);
 });
 
 it('does not cache unknown codes', function () {
