@@ -22,8 +22,8 @@ class CreateShortUrlAction
             return $existing;
         }
 
-        $minLength = config('shortenit.short_url_length');
-        $maxLength = max($minLength, config('shortenit.short_url_max_length'));
+        $minLength = config('shortenit.short_code_length');
+        $maxLength = max($minLength, config('shortenit.short_code_max_length'));
         $attempts = 0;
         $last = null;
 

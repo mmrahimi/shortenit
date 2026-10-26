@@ -9,3 +9,18 @@ function shorten($url, $guestToken = null, $user = null)
         $guestToken ? ['guest_token' => $guestToken] : [],
         $user ? ['HTTP_AUTHORIZATION' => 'Bearer '.$user->createToken('test')->plainTextToken] : []);
 }
+
+function listLinks($guestToken = null, $user = null, $query = [])
+{
+    auth()->forgetGuards();
+
+    return test()->call(
+        'GET',
+        '/api/urls',
+        $query,
+        $guestToken ? ['guest_token' => $guestToken] : [],
+        [],
+        ['HTTP_ACCEPT' => 'application/json']
+        + ($user ? ['HTTP_AUTHORIZATION' => 'Bearer '.$user->createToken('test')->plainTextToken] : []),
+    );
+}
