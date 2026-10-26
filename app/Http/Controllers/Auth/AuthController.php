@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
 use App\Actions\Auth\LoginUserAction;
 use App\Actions\Auth\LogoutUserAction;
 use App\Actions\Auth\RegisterUserAction;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginUserRequest;
 use App\Http\Requests\Auth\RegisterUserRequest;
 use Illuminate\Http\JsonResponse;
@@ -34,7 +35,7 @@ class AuthController extends Controller
 
     public function logout(Request $request, LogoutUserAction $action): JsonResponse
     {
-        $action->execute($request->user());
+        $action->execute($request->user('sanctum'));
 
         return response()->json(status: 204);
     }

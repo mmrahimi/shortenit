@@ -7,5 +7,8 @@ parameters:
     level: 6
     ignoreErrors:
         - identifiers:
-            - missingType.iterableValue
-            - missingType.generics
+              - missingType.iterableValue
+              - missingType.generics
+
+        - identifier: property.notFound
+          path: app/Http/Resources/*

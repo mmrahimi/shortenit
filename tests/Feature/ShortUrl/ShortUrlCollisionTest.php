@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 beforeEach(function () {
-    config(['shortenit.short_url_length' => 6, 'shortenit.short_url_max_length' => 8]);
+    config(['shortenit.short_code_length' => 6, 'shortenit.short_code_max_length' => 8]);
 
     foreach ([6, 7, 8] as $length) {
         ShortUrl::create([

@@ -28,6 +28,7 @@ it('rejects requests immediately after the configured limit', function ($limiter
     'urls' => ['create-url', 'POST', '/api/urls', 422],
     'redirect' => ['redirect', 'GET', '/api/unknown', 404],
     'logout' => ['general', 'POST', '/api/logout', 204, true],
+    'links' => ['general', 'GET', '/api/urls', 200],
 ]);
 
 it('gives each user their own url creation bucket', function () {
