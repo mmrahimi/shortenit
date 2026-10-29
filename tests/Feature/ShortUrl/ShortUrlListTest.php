@@ -13,8 +13,8 @@ it("lists only the caller's links, newest first, with click counts", function ()
     shorten(URL_A, user: $stranger);
     shorten(URL_A, (string) Str::uuid());
 
-    test()->get("/api/$first");
-    test()->get("/api/$first");
+    test()->get(route('redirect', $first));
+    test()->get(route('redirect', $first));
 
     $links = listLinks(user: $user)->assertOk()->json('data');
 
@@ -36,7 +36,7 @@ it('shows a guest only the links tied to their cookie', function () {
     expect($codes)->toBe([$code]);
 });
 
-it('returns an empty list instead of other peoples links when the caller has no identity', function () {
+it("returns an empty list instead of other people's links when the caller has no identity", function () {
     shorten(URL_A, user: User::factory()->create());
 
     $page = app(ListShortUrlsAction::class)->execute(null, null);

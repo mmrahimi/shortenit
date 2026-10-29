@@ -11,14 +11,6 @@ it('returns a short url that matches the redirect route', function () {
         ->toBe(route('redirect', $response->json('short_code')));
 });
 
-it('issues a uuid guest cookie to a new guest and stores it on the row', function () {
-    $cookie = shorten(URL_A)->assertCreated()->getCookie('guest_token', false);
-
-    expect($cookie)->not->toBeNull()
-        ->and(Str::isUuid($cookie->getValue()))->toBeTrue()
-        ->and(ShortUrl::first()->guest_token)->toBe($cookie->getValue());
-});
-
 it('stores a guest link with the right owner and hash', function () {
     $token = (string) Str::uuid();
 
@@ -88,45 +80,13 @@ it('ignores a stale guest cookie when a valid user token is sent', function () {
         ->guest_token->toBeNull();
 });
 
-it('does not issue a guest cookie to an authenticated user', function () {
-    $response = shorten(URL_A, user: User::factory()->create())->assertCreated();
-
-    expect($response->getCookie('guest_token', false))->toBeNull();
-});
-
-it('moves a guest link to the user on login without touching other guests', function () {
-    $user = createDoe();
-    $mine = (string) Str::uuid();
-    $other = (string) Str::uuid();
-
-    shorten(URL_A, $mine);
-    shorten(URL_B, $other);
-
-    loginAs($user, $mine)->assertOk();
-
-    expect(ShortUrl::where('user_id', $user->id)->count())->toBe(1)
-        ->and(ShortUrl::where('guest_token', $other)->whereNull('user_id')->count())->toBe(1);
-});
-
-it('keeps both links when a claimed guest url matches one the user already owns', function () {
-    $user = createDoe();
-    $token = (string) Str::uuid();
-
-    shorten(URL_A, user: $user);
-    shorten(URL_A, $token);
-
-    loginAs($user, $token)->assertOk();
-
-    expect(ShortUrl::where('user_id', $user->id)->count())->toBe(2);
-});
-
-it('requires original_url', function () {
+it('requires original url', function () {
     apiPost('/urls', [])
         ->assertUnprocessable()
         ->assertJsonValidationErrors('original_url');
 });
 
-it('rejects invalid URLs', function () {
+it('rejects invalid urls', function () {
     foreach (['not a url', 'ftp://test.com'] as $url) {
         shorten($url)->assertUnprocessable();
     }

@@ -12,8 +12,8 @@ it('counts each redirect, whoever makes it, on the visited link only', function 
     $other = shorten(URL_B, (string) Str::uuid())->json('short_code');
     $token = User::factory()->create()->createToken('test')->plainTextToken;
 
-    test()->get("api/$visited")->assertRedirect(URL_A);
-    test()->withToken($token)->get("api/$visited")->assertRedirect(URL_A);
+    test()->get(route('redirect', $visited))->assertRedirect(URL_A);
+    test()->withToken($token)->get(route('redirect', $visited))->assertRedirect(URL_A);
 
     expect(ShortUrl::firstWhere('short_code', $visited)->clicks)->toBe(2)
         ->and(ShortUrl::firstWhere('short_code', $other)->clicks)->toBe(0);
@@ -22,7 +22,7 @@ it('counts each redirect, whoever makes it, on the visited link only', function 
 it('does not count HEAD requests', function () {
     $code = shorten(URL_A, (string) Str::uuid())->json('short_code');
 
-    test()->call('HEAD', "api/$code")->assertRedirect(URL_A);
+    test()->call('HEAD', route('redirect', $code))->assertRedirect(URL_A);
 
     expect(ShortUrl::firstWhere('short_code', $code)->clicks)->toBe(0);
 });
@@ -37,7 +37,7 @@ it('still redirects and reports the error when counting fails', function () {
         }
     });
 
-    test()->get("api/$code")->assertRedirect(URL_A);
+    test()->get(route('redirect', $code))->assertRedirect(URL_A);
 
     Exceptions::assertReported(QueryException::class);
 });

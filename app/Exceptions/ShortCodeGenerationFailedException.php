@@ -15,7 +15,7 @@ class ShortCodeGenerationFailedException extends RuntimeException
         ?Throwable $previous = null,
     ) {
         parent::__construct(
-            "No unique short code after {$attempts} attempts (lengths {$minLength}-{$maxLength}).",
+            "No unique short code after $attempts attempts (lengths $minLength-$maxLength).",
             previous: $previous,
         );
     }

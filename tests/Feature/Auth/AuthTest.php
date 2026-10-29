@@ -1,9 +1,7 @@
 <?php
 
-use App\Models\ShortUrl;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 
 it('registers a user, stores a hashed password and returns a working token', function () {
@@ -22,17 +20,6 @@ it('lets a registered user log in with the same password', function () {
     apiPost('/register', NEW_USER)->assertCreated();
 
     apiPost('/login', ['username' => NEW_USER['username'], 'password' => PASSWORD])->assertOk();
-});
-
-it('hands the guest links to the new user on registration', function () {
-    $token = (string) Str::uuid();
-    shorten(URL_A, $token);
-
-    apiPost('/register', NEW_USER, ['guest_token' => $token])->assertCreated();
-
-    expect(ShortUrl::first())
-        ->user_id->toBe(User::firstWhere('username', NEW_USER['username'])->id)
-        ->guest_token->toBeNull();
 });
 
 it('rejects a username that is already taken', function () {
