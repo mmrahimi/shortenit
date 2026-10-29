@@ -18,4 +18,5 @@ Practiced system-level decision making with tradeoffs, handling concurrency, mai
 - Caching functionality through Redis
 - Race-condition handling and database integrity
 - Rate limiting
+- Automatic API documentation through Scramble + OpenAPI
 - CI pipeline
