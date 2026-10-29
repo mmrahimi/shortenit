@@ -31,7 +31,7 @@ it('rejects requests immediately after the configured limit', function ($limiter
     'links' => ['general', 'GET', '/api/urls', 200],
 ]);
 
-it('gives each user their own url creation bucket', function () {
+it('gives each user their own link creation bucket', function () {
     [$first, $second] = User::factory()->count(2)->create();
 
     foreach (range(1, limitOf('create-url')) as $i) {
